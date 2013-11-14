@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 require 'rubygems'
 require 'bundler/setup'
 $:.unshift File.expand_path '../lib', File.dirname(__FILE__)
@@ -18,12 +19,25 @@ class TestLoad < Minitest::Test
     assert_equal f.nil?, true
   end
 
+  def test_get_name_and_url
+    result_xml = open(File.dirname(__FILE__) + "/test_data_result.xml").read
+    (name, url) = WeatherPinpointJp.get_name_and_url(result_xml)
+    assert_equal name, "地名1"
+    assert_equal url, "http://example.com/result_url_1?text=1&test2=2&test3=3"
+  end
+
+  def test_get_code
+    url = File.dirname(__FILE__) + "/test_data.html"
+    code = WeatherPinpointJp.get_code(url)
+    assert_equal code, "12345"
+  end
+
   def test_load
     f = WeatherPinpointJp.load("test_data", File.dirname(__FILE__) + "/test_data.xml")
     assert_equal f.nil?, false, "load() failed..."
 
     # start time
-    assert_equal f.start_time, Time.new(2013, 11, 12, 13, 0, 0)
+    assert_equal  f.start_time, Time.new(2013, 11, 12, 13, 0, 0) 
 
     # weather
     assert_equal f.weather.size, 36
