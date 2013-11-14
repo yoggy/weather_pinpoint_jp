@@ -3,37 +3,37 @@
   <day startHour="13" startYear="2013" startMonth="11" startDate="12" startDay="2">
    <weather>
     <hour>100</hour>
-    <hour>200</hour>
-    <hour>300</hour>
-    <hour>400</hour>
+    <hour>100</hour>
+    <hour>100</hour>
+    <hour>100</hour>
     <hour>100</hour>
     <hour>200</hour>
+    <hour>100</hour>
+    <hour>100</hour>
     <hour>300</hour>
+    <hour>100</hour>
+    <hour>100</hour>
     <hour>400</hour>
     <hour>100</hour>
-    <hour>200</hour>
-    <hour>300</hour>
-    <hour>400</hour>
     <hour>100</hour>
-    <hour>200</hour>
-    <hour>300</hour>
-    <hour>400</hour>
+    <hour>500</hour>
     <hour>100</hour>
-    <hour>200</hour>
-    <hour>300</hour>
-    <hour>400</hour>
     <hour>100</hour>
+    <hour>850</hour>
+    <hour>200</hour>
+    <hour>200</hour>
+    <hour>200</hour>
+    <hour>200</hour>
     <hour>200</hour>
     <hour>300</hour>
+    <hour>200</hour>
+    <hour>200</hour>
     <hour>400</hour>
+    <hour>300</hour>
+    <hour>300</hour>
+    <hour>850</hour>
     <hour>100</hour>
-    <hour>200</hour>
-    <hour>300</hour>
-    <hour>400</hour>
     <hour>100</hour>
-    <hour>200</hour>
-    <hour>300</hour>
-    <hour>400</hour>
    </weather>
    <temperature>
     <hour>1</hour>

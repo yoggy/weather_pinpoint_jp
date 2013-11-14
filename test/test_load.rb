@@ -40,19 +40,19 @@ class TestLoad < Minitest::Test
     assert_equal  f.start_time, Time.new(2013, 11, 12, 13, 0, 0) 
 
     # weather
-    assert_equal f.weather.size, 36
+    assert_equal f.weather.size, 32
     f.weather.each_with_index {|w, i|
       w = ((i % 4) + 1) * 100
     }
 
     # temperature
-    assert_equal f.temperature.size, 36
+    assert_equal f.temperature.size, 32
     f.temperature.each_with_index {|t, i|
       assert_equal t, i + 1
     }
 
     # precipitation
-    assert_equal f.precipitation.size, 36
+    assert_equal f.precipitation.size, 32
     f.precipitation.each_with_index {|p, i|
       assert_equal p, i + 1 + 10
     }

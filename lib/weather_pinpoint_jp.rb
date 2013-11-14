@@ -92,6 +92,8 @@ module WeatherPinpointJp
         @weather << e.text.to_i
       end
 
+      @weather_3h = create_weather_3h(@weather)
+
       # temperature
       @temperature = []
       day.elements.each('temperature/hour') do |e|
@@ -105,7 +107,48 @@ module WeatherPinpointJp
       end
     end
 
-    attr_reader :location, :start_time, :weather, :temperature, :precipitation
+    # 天気コードの強さを返す
+    def code_rank(a)
+      rank = {
+          0 => 0,
+        100 => 1,
+        550 => 2,
+        200 => 3,
+        300 => 4,
+        400 => 5,
+        850 => 6,
+      }
+      return rank[a] if rank.key?(a)
+    
+      return 10
+    end
+    
+    # どちらの天気コードが影響をおよぼすか？比較
+    def compare_code(a, b)
+      return code_rank(a) <= code_rank(b)
+    end
+
+    # 3時間毎の天気コードに集約
+    def create_weather_3h(codes)
+      codes_3h = []
+      count = 0;
+      max_code = 0;
+      codes.each {|c|
+        if compare_code(max_code ,c)
+          max_code = c
+        end
+        count += 1
+        if count == 3
+          codes_3h << max_code
+          max_code = 0
+          count = 0
+        end
+      }
+
+      codes_3h
+    end
+
+    attr_reader :location, :start_time, :weather, :weather_3h, :temperature, :precipitation
   end
 end
 
