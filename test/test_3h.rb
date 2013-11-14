@@ -20,7 +20,7 @@ class Test3h < Minitest::Test
     assert_equal f.weather_3h[1], 200
     assert_equal f.weather_3h[2], 300
     assert_equal f.weather_3h[3], 400
-    assert_equal f.weather_3h[4], 500
+    assert_equal f.weather_3h[4], 550
     assert_equal f.weather_3h[5], 850
     assert_equal f.weather_3h[6], 200
     assert_equal f.weather_3h[7], 300

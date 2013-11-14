@@ -18,7 +18,7 @@ module WeatherPinpointJp
   CLOUDY     = 200
   RAINY      = 300
   SNOWY      = 400
-  HEAT_WAVE  = 500
+  HEAT_WAVE  = 550
   HEAVY_RAIN = 850
 
   class << self
