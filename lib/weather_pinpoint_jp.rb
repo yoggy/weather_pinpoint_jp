@@ -148,7 +148,7 @@ module WeatherPinpointJp
       codes_3h
     end
 
-    attr_reader :location, :start_time, :weather, :weather_3h, :temperature, :precipitation
+    attr_reader :location, :start_time, :weather, :weather_3h, :temperature, :precipitation, :url
   end
 end
 
