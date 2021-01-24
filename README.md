@@ -24,31 +24,19 @@ require 'weather_pinpoint_jp'
 forecast = WeatherPinpointJp.get("東京都千代田区")
 
 puts forecast.location
-
-t = forecast.start_time
 forecast.weather.each {|w|
-  puts "#{t.strftime("%Y/%m/%d %H:%M")} #{w}"
-  t += 3600
+  puts "#{w}"
 }
 </pre>
 
 <pre>
 require 'weather_pinpoint_jp'
 
-forecast = WeatherPinpointJp.get("100000", WeatherPinpointJp::POSTAL_CODE)
+forecast = WeatherPinpointJp.get("100000")
 
 puts forecast.location
-t = forecast.start_time
 forecast.weather.each {|w|
-  puts "#{t.strftime("%Y/%m/%d %H:%M")} #{w}"
-  t += 3600
+  puts "#{w}"
 }
 </pre>
 
-## Contributing
-
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
