@@ -1,9 +1,10 @@
 # -*- coding:utf-8 -*-
 
-require "weather_pinpoint_jp/version"
+#require "weather_pinpoint_jp/version"
 require 'net/http'
 require 'uri'
 require 'open-uri'
+require 'json'
 require 'rexml/document'
 require 'pp'
 
@@ -21,47 +22,34 @@ module WeatherPinpointJp
   HEAT_WAVE  = 550
   HEAVY_RAIN = 850
 
+  # for debug
+  @@debug = false
+
   class << self
+    def debug()
+      @@debug
+    end
+
+    def debug=(flag)
+      @@debug = flag
+    end
+
     def get(keyword, type = ADDRESS)
-      search_url = URI.parse("http://weathernews.jp/pinpoint/cgi/search_point.cgi")
+      search_url = "https://weathernews.jp/onebox/api_search.cgi?query=" + URI.encode_www_form_component(keyword)
+      json = JSON.parse(URI.open(search_url).read)
 
-      # search location...
-      body = ""
-      Net::HTTP.start(search_url.host, search_url.port) do |http|
-        query = "<search><keyword>#{keyword}</keyword><category>#{type}</category></search>"
-        res = http.post(search_url.path, query, {})
-        body = res.body
+      pp json if @@debug
+
+      if json.is_a?(Array) == false || json.size == 0 
+        puts "ERROR : cant get url...search_url={search_url}"
+        return nil
       end
 
-      # get location name & html url
-      (name, html_url) = get_name_and_url(body)
+      html_url = "https://weathernews.jp" + json[0]["url"]
 
-      # find the location code...
-      location_code = get_code(html_url)
+      puts "DEBUG : html_url=#{html_url}" if @@debug
 
-      # return pinpoint forecast instance...
-      xml_url = "http://weathernews.jp/pinpoint/xml/#{location_code}.xml"
-      return load(name, xml_url)
-    end
-
-    def get_name_and_url(xml_str)
-      escaped_body = xml_str.gsub(/\&/, "&amp;")
-
-      doc = REXML::Document.new(escaped_body)
-      result_num = doc.elements['/pin_result/seac_cnt'].text.to_i
-      if result_num == 0
-        raise "cannot find the location..."
-      end
-
-      html_url = doc.elements['/pin_result/data_ret/ret/url'].text
-      name     = doc.elements['/pin_result/data_ret/ret/name'].text
-
-      [name, html_url]
-    end
-
-    def get_code(url)
-      html = open(url).read
-      location_code = html.scan(/obsOrg=(.*?)&xmlFile/)[0][0]
+      return load(json[0]["loc"], html_url)
     end
 
     def load(name, url)
@@ -74,37 +62,16 @@ module WeatherPinpointJp
       @location = location
       @url = url
 
-      # load xml
-      doc = REXML::Document.new(open(url))
-      day = doc.elements['//weathernews/data/day']
-
-      # get starttime
-      year  = day.attributes['startYear'].to_i
-      month = day.attributes['startMonth'].to_i
-      date  = day.attributes['startDate'].to_i
-      hour  = day.attributes['startHour'].to_i
-
-      @start_time = Time.local(year, month, date, hour, 0, 0)
-
-      # weather
       @weather = []
-      day.elements.each('weather/hour') do |e|
-        @weather << e.text.to_i
+
+      URI.open(@url) do |f|
+        @weather = f.readlines.grep(/\"weather-day__icon\"/).map{|l| l.chomp.gsub(/^.+wxicon\/(\d+)\.png.+\>$/,"\\1")}.map{|s| s.to_i}
+        @weather = @weather.map{|n| n == 500 ? 100 : n}
+        @weather = @weather.map{|n| n == 650 ? 300 : n}
+        @weather = @weather.map{|n| n == 430 ? 400 : n}
       end
 
-      @weather_3h = create_weather_3h(@weather)
-
-      # temperature
-      @temperature = []
-      day.elements.each('temperature/hour') do |e|
-        @temperature << e.text.to_i
-      end
-
-      # precipitation
-      @precipitation = []
-      day.elements.each('precipitation/hour') do |e|
-        @precipitation << e.text.to_i
-      end
+        @weather_3h = create_weather_3h(@weather)
     end
 
     # 天気コードの強さを返す
@@ -148,7 +115,7 @@ module WeatherPinpointJp
       codes_3h
     end
 
-    attr_reader :location, :start_time, :weather, :weather_3h, :temperature, :precipitation, :url
+    attr_reader :location, :weather, :weather_3h, :url
   end
 end
 

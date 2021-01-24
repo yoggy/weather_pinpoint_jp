@@ -11,10 +11,10 @@ class Test3h < Minitest::Test
   end
 
   def test_load
-    f = WeatherPinpointJp.load("test_data", File.dirname(__FILE__) + "/test_data2.xml")
+    f = WeatherPinpointJp.load("test_data", File.dirname(__FILE__) + "/test.html")
     assert_equal f.nil?, false, "load() failed..."
 
-    assert_equal f.weather_3h.size, 10 # 32/3 = 10.66... => 10
+    assert_equal f.weather_3h.size, 9 
 
     assert_equal f.weather_3h[0], 100
     assert_equal f.weather_3h[1], 200
@@ -25,7 +25,6 @@ class Test3h < Minitest::Test
     assert_equal f.weather_3h[6], 200
     assert_equal f.weather_3h[7], 300
     assert_equal f.weather_3h[8], 400
-    assert_equal f.weather_3h[9], 850
   end
 end
 

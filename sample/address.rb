@@ -8,6 +8,5 @@ forecast = WeatherPinpointJp.get("東京都千代田区")
 puts forecast.location
 t = forecast.start_time
 forecast.weather.each {|w|
-  puts "#{t.strftime("%Y/%m/%d %H:%M")} #{w}"
-  t += 3600
+  puts "#{w}"
 }
